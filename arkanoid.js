@@ -123,37 +123,5 @@ document.addEventListener("DOMContentLoaded", () => {
         ball.y += speed * directionY;
     }
 
-
-/*
-
-    let brickRowCount = 5;
-    let brickColumnCount = 6;
-    let brickWidth = 75;
-    let brickHeight = 20;
-    let brickPadding = 15;
-    let brickOffsetTop = 40;
-    let brickOffsetLeft = 35;
-
-
-    //fonction qui affiche les bricks
-    function drawBricks() {
-        for (i = 0; i < brickColumnCount; i++) {
-            for (y = 0; y < brickRowCount; y++) {
-                if (bricks[i][y].status == 1) {
-                    var brickX = (i * (brickWidth + brickPadding)) + brickOffsetLeft;
-                    var brickY = (y * (brickHeight + brickPadding)) + brickOffsetTop;
-                    bricks[i][y].x = brickX;
-                    bricks[i][y].y = brickY;
-                    ctx.beginPath();
-                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                    ctx.fillStyle = colors[bricks[i][y].color];
-                    ctx.fill();
-                    ctx.closePath();
-                }
-            }
-        }
-    }
-*/
-
 });
 
