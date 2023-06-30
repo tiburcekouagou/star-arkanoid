@@ -1,0 +1,54 @@
+.container {
+    margin: 0 50px;
+    padding: 2rem;
+}
+
+body {
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}
+
+/* HEADER */
+
+.header {
+    text-align: center;
+    background-color: #4a4848;
+    border: 1px solid #4a4848;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #dd5735;
+}
+
+header p {
+    color: #999;
+}
+
+
+/* MAIN */
+
+#canvas{
+    border: 5px solid red;
+    margin-inline: auto;
+    display: block;
+}
+
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    background-color: #4a4848;
+    border: 1px solid #4a4848;
+}
+
+footer p a {
+    color: #f00;
+    text-decoration: none;
+}
+
+footer p {
+    color: #fff;
+}
