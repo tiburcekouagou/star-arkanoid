@@ -1,0 +1,12 @@
+
+
+
+.container{
+max-width: 1500px;
+margin: 0 auto;
+}
+
+#canvas {
+    margin: 250px;
+    border: 5px solid royalblue;
+}
