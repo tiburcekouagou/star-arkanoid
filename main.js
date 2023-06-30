@@ -1,144 +1,226 @@
-'use strict'
-// debugger
-let width = window.innerWidth - 100;
-console.log(width);
-let height = window.innerHeight - 50;
-console.log(height);
+`use strict`
 
-let ball = {
-    x:(width - 40) / 2,
-    y:(height - 40) - 30,
-    color: "red",
-    radius: 40,
-    directionX: 5,
-    directionY :5,
-};
+document.addEventListener("DOMContentLoaded", () => {
 
-let game = {
-    width: width,
-    height: height,
-    color: "#ccc",
-    gameOver: false,
-};
+    /*==========================================================================================================================================
+    --------------------------------------------------------------LES VARIABLES-----------------------------------------------------------------
+    ==========================================================================================================================================*/
 
-let paddle ={
-    
-    speed: 1,
-    color: "blue",
-    width: 100,
-    height: 30,
-    direction: 4,
-    x: ((width - 40) - 100) / 2,
-    y: (height - 40) + 10 , 
-};
+    let canvaArkanoid = document.querySelector("#canvas");
+    let ctx = canvaArkanoid.getContext('2d');
+    let frame;
+    let touch = 0;
 
-let canva;
-let context;
-let request;
-function playGame(){
-    // if(ball.y - ball.radius < 0 ){
-    //     ball.directionY *= -1;
-    // }else if(ball.y + ball.radius > game.height ){
-    //     ball.directionY *= -1;
-    // };
-    // ball.y = ball.y - ball.directionX;  
-    // if(ball.x - ball.radius < 0 ){
-    //     ball.directionX *= -1;
-    // }else if(ball.x + ball.radius > game.height ){
-    //     ball.directionX *= -1;
-    // };
-    // ball.x = ball.x - ball.directionX;  
-    detectColision();  
-    if(ball.y + ball.radius > game.height){
-        ball.directionY *= -1;
-        game.gameOver = true;        
-        // ball.directionY = 0;
-        context.font = 'bold 100px cursive';
-        context.fillStyle = "black";
-        context.fillText("GAME OVER 🎮", (width / 2) - 300, height / 2 );
-        cancelAnimationFrame(requestId);
+
+    let game = {
+        width: canvaArkanoid.width,
+        height: canvaArkanoid.height,
+        color: "#DDD",
+        gameOver: false,
+        start: false,
+        pause: true
+    }
+
+    let paddle = {
+        x: game.width / 2 - 40,
+        y: game.height - 10,
+        speed: 50,
+        color: "#0aa5d0",
+        largeur: 80,
+        hauteur: 10,
+        direction: 1,
+        arrow: true
+    }
+
+    let ball = {
+        x: paddle.x + (paddle.largeur / 2),
+        y: 883,
+        color: "#FF0000",
+        rayon: 15,
+        directionX: 1,
+        directionY: 1
+    }
+
+    console.log(game.width / 2 - 40)
+
+
+
+    /*==========================================================================================================================================
+    --------------------------------------------------------------LES FONCTIONS-----------------------------------------------------------------
+    ==========================================================================================================================================*/
+
+    // initPlay
+
+    function initPlay() {
+        ctx.clearRect(0, 0, game.width, game.height);
+        ctx.fillStyle = game.color;
+        ctx.fillRect(0, 0, game.width, game.height);
+
+        ctx.fillStyle = ball.color;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.rayon, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.fillStyle = paddle.color;
+        ctx.fillRect(paddle.x, paddle.y, paddle.largeur, paddle.hauteur);
+    }
+
+
+    //DisplayGame
+
+    function displayGame() {
+
+        if (game.gameOver === false) {
+            initPlay();
+
+        } else if (game.gameOver === true) {
+
+            cancelAnimationFrame(frame);
+
+            ctx.clearRect(0, 0, game.width, game.height);
+            ctx.fillStyle = game.color;
+            ctx.fillRect(0, 0, game.width, game.height);
+
+            ctx.font = "bold 50px Tahoma";
+            ctx.fillStyle = "red";
+            ctx.fillText("Game Over", game.width / 2 - 150, game.height / 2 - 20);
+
+        }
+
+        if (game.start === true && game.pause === false) {
+            playGame();
+        }
+
+    }
+
+    //keybordEvent
+
+    /**
+     * 
+     * @param {keyPress} press 
+     */
+
+    function keyboardEvent(press) {
+        if (paddle.arrow === true) {
+            switch (press.key) {
+                case 'ArrowRight':
+                    if (paddle.x + paddle.largeur < canvaArkanoid.width) {
+                        paddle.x += 1 + paddle.speed;
+                    }
+                    break;
+
+                case 'ArrowLeft':
+                    if (paddle.x > 0) {
+                        paddle.x -= 1 + paddle.speed;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            initPlay();
+        } else if(paddle.arrow === false){
+            return;
+        }
+
+
+        console.log(press.key);
+    }
+
+
+
+    //playGame
+
+    function playGame() {
+        detectCollisions();
+        ball.y += ball.directionY;
+        ball.x += ball.directionX;
+        frame = requestAnimationFrame(displayGame);
+    }
+
+
+    //detectCollisions
+
+
+    function detectCollisions() {
+        if (ball.y >= 870 && (ball.x >= (paddle.x - ball.rayon * 2) && ball.x <= (paddle.x + paddle.largeur + ball.rayon * 2))) {
+            ball.directionY = -3;
+        } else if (ball.y <= ball.rayon) {
+            ball.y = ball.rayon;
+            ball.directionY = 3;
+        } else if (ball.y > game.height - paddle.hauteur - ball.rayon) {
+            game.gameOver = true;
+        }
+        if (ball.x >= (game.width - ball.rayon) || ball.x <= ball.rayon) {
+            ball.directionX *= -1;
+        }
+
+        ball.y += 1 * ball.directionY;
+        ball.x += 1 * ball.directionX;
+
+    }
+
+
+    //initPositions
+
+    function initPositions(space) {
+        if (space.key === " ") {
+            touch++
+            if (touch % 2 === 1) {
+                game.start = true;
+                game.pause = false;
+                paddle.arrow = true
+            } else if (touch % 2 === 0) {
+                game.start = false;
+                game.pause = true;
+                paddle.arrow = false;
+            }
+
+            displayGame() 
+        }
+    }
+
+    // initGame
+
+    function initGame(spaceInit) {
+        if (spaceInit.key === ' ') {
+            if (game.gameOver === true) {
+                initDimension();
+                game.gameOver = false;
+                game.start = false;
+                game.pause = true;
+                paddle.arrow = false
+                initPlay();
+            }
+
+        }
+    }
+
+    // initDimension
+
+    function initDimension() {
+        paddle.x = 410;
+        ball.x = paddle.x + (paddle.largeur / 2);
+        ball.y = 875;
+        ball.directionX = 1;
+
+    }
+
+    // briques
+
+    function briques() {
         
-    }else if(ball.y - ball.radius < 0 ){
-        ball.directionY *= -1;
-    };
-    ball.y = ball.y + ball.directionY;
-    
-    if(ball.x + ball.radius > game.width  ){
-        ball.directionX *= -1;
-    }else if(ball.x - ball.radius < 0 ){
-        ball.directionX *= -1;
-    };
-    ball.x = ball.x + ball.directionX; 
-    displayball();
-    let requestId = requestAnimationFrame(playGame);
-    request = requestId;
-};  
+    }
 
-function displayball(){
-    context.clearRect(0, 0, canva.width, canva.height)
-    context.fillStyle = ball.color;
-    context.beginPath();
-    context.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-    context.fill();
-    displayPaddle();
-};
+    /*==========================================================================================================================================
+    --------------------------------------------------------------LE CORPS PRINCIPAL------------------------------------------------------------
+    ==========================================================================================================================================*/
 
-function displayPaddle(){
-    context.fillStyle = paddle.color;
-    context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-}
-    
-function initGame(){
-    document.addEventListener("keydown" , function(event){
-        let spaceCount = 0;
-        console.log(event.key);
-        if(event.key === "ArrowRight" && paddle.x + paddle.width < game.width){
-            paddle.x += 20;
-        }else if(event.key ==="ArrowLeft" && paddle.x > 0){
-            paddle.x -= 20;
-        }else if(event.key === " "){
-            spaceCount++;
-            if(spaceCount % 2 === 0){
-                playGame();
-            }else if(spaceCount % 2 === 1){
-                cancelAnimationFrame(request);
-            };
-        };
-    });                
-};
-
-function detectColision(){
-    
-
-    if((ball.x - ball.radius) >= paddle.x - (ball.radius * 2) && (ball.x + ball.radius) <= (paddle.x + paddle.width) + 
-    (ball.radius * 2) && (ball.y + ball.radius) >= paddle.y){
-        ball.directionY *= -1;
-        ball.y = ball.y + ball.directionY;
-    };
-};
-
-function gameOver(){
-    if(game.gameOver === true){
-        ball.directionY = 0;
-        context.font = 'bold 40px cursive';
-        context.fillStyle = "black";
-        context.fillText("GAME OVER 🎮", width / 2, height / 2 );
-        cancelAnimationFrame(requestId);
-    };
-};
-
-document.addEventListener("DOMContentLoaded", function(){    
-    
-    canva = document.getElementById('canvas');
-    canva.width = game.width;
-    canva.height = game.height;
-    canva.style.border = "1px solid black";
-    canva.style.backgroundColor = game.color;
-    context = canva.getContext('2d');
-
-    displayball();
-    displayPaddle();
     playGame();
-    initGame();    
-    
+    document.addEventListener("keydown", initPositions);
+    document.addEventListener("keydown", initGame);
+    document.addEventListener("keydown", keyboardEvent);
+
+
+
 });
+
