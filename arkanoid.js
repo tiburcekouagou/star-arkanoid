@@ -10,19 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // variables position de la ball
     let position = {
-        x: 300,
-        y: 760
+        x: 630,
+        y: 740
     };
 
     // variables globale concernant la vitesse de la ball et la direction sur x et y
-    let speed = 5;
+    let speed = 1;
     let directionX = -1;
     let directionY = -1;
 
     // variable du rectangle 
-    let rect = {
+    let paddle = {
         x: 550,
-        y: 760,
+        y: 780,
         Width: 150,
         Height: 25,
         color: "#ffffff",
@@ -38,13 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // variables of rect constructions
-    let rectRowCount = 6;
-    let rectColumnCount = 8;
-    let rectWidth = 80;
-    let rectHeight = 25;
-    let rectPadding = 20;
-    let rectOffsetTop = 50;
-    let rectOffsetLeft = 200;
+    let paddleRowCount = 6;
+    let paddleColumnCount = 8;
+    let paddleWidth = 80;
+    let paddleHeight = 25;
+    let paddlePadding = 20;
+    let paddleOffsetTop = 50;
+    let paddleOffsetLeft = 200;
 
     // variables of difference message
     let score = 0;
@@ -60,21 +60,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //créer plusieurs rectangle à la fois
 
-    let rects = [];
+    let paddles = [];
+    let colors = ["#ffffff"];
 
-    for (let b = 0; b < rectColumnCount; b++) {
-        rects[b] = [];
-        for (let r = 0; r < rectRowCount; r++) {
-            rects[b][r] = {
+    for (let b = 0; b < paddleColumnCount; b++) {
+        paddles[b] = [];
+        for (let r = 0; r < paddleRowCount; r++) {
+            paddles[b][r] = {
                 x: 0,
                 y: 0,
-                status: 1,
                 color: "#ffffff"
             };
         }
     };
 
-    let colors = ["#ffffff"];
 
 
 
@@ -85,27 +84,27 @@ document.addEventListener("DOMContentLoaded", () => {
         context.fillStyle = "#ffffff";
         context.fillText("Lives: " + lives, canvas.width - 150, 70);
     }
-    
+
 
     function showScore() {
         context.font = "2rem Arial";
         context.fillStyle = "#ffffff";
         context.fillText("Score: " + score, 20, 70);
     }
-   
+
 
     //fonction qui permet d'afficher les rectangles 
-    function showRects() {
-        for (let b = 0; b < rectColumnCount; b++) {
-            for (let r = 0; r < rectRowCount; r++) {
-                if (rects[b][r].status == 1) {
-                    let rectX = (b * (rectWidth + rectPadding)) + rectOffsetLeft;
-                    let rectY = (r * (rectHeight + rectPadding)) + rectOffsetTop;
-                    rects[b][r].x = rectX;
-                    rects[b][r].y = rectY;
+    function showPaddle() {
+        for (let b = 0; b < paddleColumnCount; b++) {
+            for (let r = 0; r < paddleRowCount; r++) {
+                if (paddles[b][r].status == 1) {
+                    let paddleX = (b * (paddleWidth + paddlePadding)) + paddleOffsetLeft;
+                    let paddleY = (r * (paddleHeight + paddlePadding)) + paddleOffsetTop;
+                    paddles[b][r].x = paddleX;
+                    paddles[b][r].y = paddleY;
                     context.beginPath();
-                    context.rect(rectX, rectY, rectWidth, rectHeight);
-                    context.fillStyle = colors[rects[b][r].color];
+                    context.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+                    context.fillStyle = colors[paddles[b][r].color];
                     context.fill();
                     context.closePath();
                 }
@@ -113,27 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function collisionrectDetection() {
-        for(let b = 0; b  < rectColumnCount; b++) {
-            for(let r = 0; r < rectRowCount; r++) {
-                let casse = rects[b][r];
-                if(casse.status === 1){
-                    if(ball.x > b.x && ball.x < casse.x + rectWidth && ball.y > casse.y && ball.y < casse.y + rectHeight) {
-                        ball.dy = -ball.dy;
-                        casse.status = 0;
-                        if(game){
-                            playGame();
-                        }
-                        score++;
-                          if(score ===  rectRowCount * rectColumnCount) {
-                            win = true;
-                        }
-                    }
-                  }
-            }
-        }
-    }
-   
 
     // fonction qui permet d'animer la ball
     function playGame() {
@@ -156,35 +134,36 @@ document.addEventListener("DOMContentLoaded", () => {
         context.fill();
         context.closePath();
 
-        context.fillStyle = rect.color;
-        context.fillRect(rect.x, rect.y, rect.Width, rect.Height);
+        context.fillStyle = paddle.color;
+        context.fillRect(paddle.x, paddle.y, paddle.Width, paddle.Height);
         collisionBall();
         showLive();
         showScore();
-        showRects();
+        showPaddle();
         animation = requestAnimationFrame(playGame);
         gameOver();
+        collisionPaddleDetection();
 
     }
 
-    // la fonction qui permet de répéter animation à un interval de temps régulier
+    // fonction qui permet de répéter l'animation à chaque rafraîchissement de la page
     playGame();
 
     // fonction qui permet de supprimer et de réafficher le rectangle pendant qu'il donne l'illusion de bouger
-    function displayRect() {
+    function displayGame() {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = rect.color;
-        context.fillRect(rect.x, rect.y, rect.Width, rect.Height);
+        context.fillStyle = paddle.color;
+        context.fillRect(paddle.x, paddle.y, paddle.Width, paddle.Height);
     }
 
     // fonction qui permet de collisionner la ball avec le rectangle 
     function collisionBall() {
 
         if (
-            (ball.x - ball.radius) >= rect.x - (2 * ball.radius)
-            && (ball.x + ball.radius) <= (rect.x + rect.Width) + (2 * ball.radius)
-            && (ball.y + ball.radius) >= rect.y
-            && (rect.y - rect.Height) <= ball.y) {
+            (ball.x - ball.radius) >= paddle.x - (2 * ball.radius)
+            && (ball.x + ball.radius) <= (paddle.x + paddle.Width) + (2 * ball.radius)
+            && (ball.y + ball.radius) >= paddle.y
+            && (paddle.y - paddle.Height) <= ball.y) {
 
             directionY = -1;
 
@@ -196,6 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // fonction permettant de faire le gameOver
     function gameOver() {
+
         if ((ball.y + ball.radius) >= canvas.height) {
             context.font = "5rem Impact";
             context.fillStyle = "#3ff84b";
@@ -204,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // fonction permettant de mettre en pause le jeu
     function pauseGame() {
         if ((ball.y + ball.radius) >= canvas.height) {
             context.font = "2rem Impact";
@@ -212,58 +193,73 @@ document.addEventListener("DOMContentLoaded", () => {
             cancelAnimationFrame(animation)
         }
     }
-        
-function handleGame() {
 
-    for (let b = 0; b < rectColumnCount; b++) {
-        for (let r = 0; r < rectRowCount; r++) {
-            rects[b][r].status = 1;
-            rects[b][r].color = "#3ff84b";
+    function handleGame() {
+
+        for (let b = 0; b < paddleColumnCount; b++) {
+            for (let r = 0; r < paddleRowCount; r++) {
+                paddles[b][r].status = 1;
+                paddles[b][r].color = "#3ff84b";
+            }
         }
     }
-}
 
-handleGame();
-         
+    handleGame();
 
-    function initGame() {
+    function drawPaddle() {
+        if (ball.x + ball.y < ball.radius) {
+            ball.dy = -ball.dy;
+            if (game) {
+                playGame();
+            }
+        } else if (ball.y + ball.dy > canvas.height - ball.radius) {
+            if (ball.x > paddle.x - 10 && ball.x < paddle.x + paddle.Width + 10) {
+                ball.dy = -ball.dy;
+            } else {
+                if (!win) {
+                    lives--;
+                }
 
-       
+                if (lives === 0) {
+                    defeat = true;
+                } else {
+                    ball.x = 0;
+                    ball.y = 0;
+                    ball.dy = paddle.x + paddle.Width / 2;
+                    ball.dx = canvas.height - 30;
+                }
+            }
+
+        }
     }
 
-
-
-    /*************************************************les évènements************************************************/
-
-    //evènements qui permettant de faire bouger le rectangle dans les quatres directions
-    document.addEventListener("keydown", (events) => {
-
+    function initGame(events) {
         switch (events.key) {
             case "ArrowRight":
-                if (rect.x + rect.Width < canvas.width) {
-                    rect.x += rect.speed;
-                    displayRect();
+                if (paddle.x + paddle.Width < canvas.width) {
+                    paddle.x += paddle.speed;
+                    displayGame();
                 }
                 break;
 
             case "ArrowLeft":
-                if (rect.x > 0) {
-                    rect.x -= rect.speed;
-                    displayRect();
+                if (paddle.x > 0) {
+                    paddle.x -= paddle.speed;
+                    displayGame();
                 }
                 break;
 
             case "ArrowDown":
-                if (rect.y + rect.Height < canvas.height) {
-                    rect.y += rect.speed;
-                    displayRect();
+                if (paddle.y + paddle.Height < canvas.height) {
+                    paddle.y += paddle.speed;
+                    displayGame();
                 }
                 break;
 
             case "ArrowUp":
-                if (rect.y > 0) {
-                    rect.y -= rect.speed;
-                    displayRect();
+                if (paddle.y > 0) {
+                    paddle.y -= paddle.speed;
+                    displayGame();
                 }
                 break;
             case " ":
@@ -280,8 +276,183 @@ handleGame();
                 break;
         }
 
+    }
+
+    function collisionPaddleDetection() {
+        for (let b = 0; b < paddleColumnCount; b++) {
+            for (let r = 0; r < paddleRowCount; r++) {
+                let c = paddles[b][r];
+                if (c.status === 1) {
+                    if (ball.x > b.x && ball.x < c.x + paddleWidth && c.y > c.y && ball.y < c.y + paddleHeight) {
+                        directionY = -directionY;
+                        c.status = 0;
+                        if (game) {
+                            playGame();
+                        }
+                        score++;
+                        if (score === paddleRowCount * paddleColumnCount) {
+                            win = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
-    });
+
+    /*************************************************les évènements************************************************/
+
+    //evènements qui permettant de faire bouger le rectangle dans les quatres directions
+    document.addEventListener("keydown", initGame);
+
 });
+
+/*
+'use strict'
+// debugger
+let width = window.innerWidth - 100;
+console.log(width);
+let height = window.innerHeight - 50;
+console.log(height);
+
+let ball = {
+    x:(width - 40) / 2,
+    y:(height - 40) - 30,
+    color: "red",
+    radius: 40,
+    directionX: 5,
+    directionY :5,
+};
+
+let game = {
+    width: width,
+    height: height,
+    color: "#ccc",
+    gameOver: false,
+};
+
+let paddle ={
+    
+    speed: 1,
+    color: "blue",
+    width: 100,
+    height: 30,
+    direction: 4,
+    x: ((width - 40) - 100) / 2,
+    y: (height - 40) + 10 , 
+};
+
+let canva;
+let context;
+let request;
+function playGame(){
+    // if(ball.y - ball.radius < 0 ){
+    //     ball.directionY *= -1;
+    // }else if(ball.y + ball.radius > game.height ){
+    //     ball.directionY *= -1;
+    // };
+    // ball.y = ball.y - ball.directionX;  
+    // if(ball.x - ball.radius < 0 ){
+    //     ball.directionX *= -1;
+    // }else if(ball.x + ball.radius > game.height ){
+    //     ball.directionX *= -1;
+    // };
+    // ball.x = ball.x - ball.directionX;  
+    detectColision();  
+    if(ball.y + ball.radius > game.height){
+        ball.directionY *= -1;
+        game.gameOver = true;        
+        // ball.directionY = 0;
+        context.font = 'bold 100px cursive';
+        context.fillStyle = "black";
+        context.fillText("GAME OVER 🎮", (width / 2) - 300, height / 2 );
+        cancelAnimationFrame(requestId);
+        
+    }else if(ball.y - ball.radius < 0 ){
+        ball.directionY *= -1;
+    };
+    ball.y = ball.y + ball.directionY;
+    
+    if(ball.x + ball.radius > game.width  ){
+        ball.directionX *= -1;
+    }else if(ball.x - ball.radius < 0 ){
+        ball.directionX *= -1;
+    };
+    ball.x = ball.x + ball.directionX; 
+    displayball();
+    let requestId = requestAnimationFrame(playGame);
+    request = requestId;
+};  
+
+function displayball(){
+    context.clearRect(0, 0, canva.width, canva.height)
+    context.fillStyle = ball.color;
+    context.beginPath();
+    context.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+    context.fill();
+    displayPaddle();
+};
+
+function displayPaddle(){
+    context.fillStyle = paddle.color;
+    context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+}
+    
+function initGame(){
+    document.addEventListener("keydown" , function(event){
+        let spaceCount = 0;
+        console.log(event.key);
+        if(event.key === "ArrowRight" && paddle.x + paddle.width < game.width){
+            paddle.x += 20;
+        }else if(event.key ==="ArrowLeft" && paddle.x > 0){
+            paddle.x -= 20;
+        }else if(event.key === " "){
+            spaceCount++;
+            if(spaceCount % 2 === 0){
+                playGame();
+            }else if(spaceCount % 2 === 1){
+                cancelAnimationFrame(request);
+            };
+        };
+    });                
+};
+
+function detectColision(){
+    
+
+    if((ball.x - ball.radius) >= paddle.x - (ball.radius * 2) && (ball.x + ball.radius) <= (paddle.x + paddle.width) + 
+    (ball.radius * 2) && (ball.y + ball.radius) >= paddle.y){
+        ball.directionY *= -1;
+        ball.y = ball.y + ball.directionY;
+    };
+};
+
+function gameOver(){
+    if(game.gameOver === true){
+        ball.directionY = 0;
+        context.font = 'bold 40px cursive';
+        context.fillStyle = "black";
+        context.fillText("GAME OVER 🎮", width / 2, height / 2 );
+        cancelAnimationFrame(requestId);
+    };
+};
+
+document.addEventListener("DOMContentLoaded", function(){    
+    
+    canva = document.getElementById('canvas');
+    canva.width = game.width;
+    canva.height = game.height;
+    canva.style.border = "1px solid black";
+    canva.style.backgroundColor = game.color;
+    context = canva.getContext('2d');
+
+    displayball();
+    displayPaddle();
+    playGame();
+    initGame();    
+    
+});
+
+*/
 
