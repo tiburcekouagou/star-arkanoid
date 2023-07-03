@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="class.js"></script>
+    <title>POO : Programmation Orientée Objet </title>
+</head>
+
+<body>
+
+    <!-- <p>les class</p> -->
+    <h1>JavaScript POO</h1>
+    <p>La POO est un paradigme de programmation qui permet d'organiser et de structurer le code en utilisant des
+        concepts appelés <strong>objets.</strong></p>
+    <p> Un <strong>paradigme de programmation </strong> une approche ou une methode generale qui guide la façon dont on
+        structure et organise le code d'un programme.</p>
+
+    <h2>Qu'est ce qu'un Objet ?</h2>
+    <p>Un <strong> Objet</strong> represente un concept, une idée ou tte entité du monde physique, comme une voiture,
+        une personne ou encore une page d'un livre</p>
+
+    <!-- <form action="" method="post">
+
+        <label for="name">Nom</label>
+        <input id="name" type="text" placeholder="Entrez-vôtre nom">
+        <label for="fname">Prénom</label>
+        <input id="fname" type="text" placeholder="Entrez-vôtre prénom">
+    </form> -->
+
+
+
+
+    <script>
+        //    creation d'un objet 
+
+        let person1 = {
+            firstname: 'John',
+            lastname: "Doe",
+            courir: function () { console.log("Je cours !"); },
+            // il faut noter que ici courir est une proprité (autant que firstname et lastname)mais on l'appellera plutot méthode car la valeur de cette derniere est une fonction ; on peut recrire sous cette forme : let person1 = {firstname : 'John', lastname: "Doe",courir :(){console.log("Je cours !");}
+            
+        };
+        
+        person1.courir; //appelle de la méthode "courir"
+        console.log(person1.courir);// retourne dans le navigateur function () { console.log("Je cours !"); }
+        
+        // si jessaie de connaitre l'age de la person1 j'aurai undefin avec le console.log
+        person1.age; //appelle de la méthode "age"
+        console.log(person1.age) // c est du au fait que l age n a pas ete defini au niveau de l objet person1 
+        
+        
+        // si on redefinisait une nouvele  valeur avec sa nouvelle propriete non existante et une  exsistante mais avec une nouvelle valeur le console.log donne ceci
+        person1.age = 24
+        console.log(person1.age)
+        person1.firstname = 'Johnsonne';
+        console.log(person1.firstname)
+        
+        person1.fulName = function () {
+            return `on m appelle ${person1.firstname} ${person1.lastname}`
+        }
+
+        console.log(person1.fulName());
+
+
+        // NOTION DE "class"  en JS
+
+            // ici les class nous permettent  
+        class Person {
+
+            // on peut declarer des variable mais sans le let ou sans const ; on met le nom de la variable ensuite = et ensuite la valeur surtout ne pas mettre let ou const , on donc ce qui suit:
+            // firstname = "kaka"
+            // lastname="koko"
+
+            // le mieux alors c'est de faire un coonstructor voici:
+
+            constructor (fname,lname) {
+                  this.firstname = fname ;              
+                  this.lastname = lname ;
+            }
+
+            courir() {
+                console.log("Je cours !");
+            }
+
+            fulName () {
+                console.log(`on m appelle ${person1.firstname} ${person1.lastname}`);// on evite de mettre ceci(person1) car une fois dans la class on ne met plus le nom de la variable objet (person1)pour eviter undefined  mettez plutot this , voyez par vs mm dans la ligne qui suit :
+                console.log(`on m appelle ${this.firstname} ${this.lastname}`);
+            }
+        }
+     let toto = new Person("tota","goga"); // c est instanciation de l objet toto de la classe Person avec pour argument "tota"et "goga"  si on n avait pas ces arguments les this.firstname renverrait au niveau du navigateur undefinde lors du console.log voir au niveau de fulname
+     toto.fulName();
+     console.log( toto.fulName);
+     console.log(toto);
+
+     let paulin = new Person("gigi","gaga"); // c est instanciation de l objet toto de la classe Person
+     paulin.fulName();
+     console.log(paulin);
+    </script>
+</body>
+
+</html>
