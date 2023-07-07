@@ -6,10 +6,13 @@ import { paddle } from "./main.js";
 import { ctx } from "./main.js";
 import { score } from "./bricker.js";
 import { live } from "./move.js";
+import { nbrBrick } from "./bricker.js";
+import { init } from "./init.js";
+let image = document.getElementById('img')
 function display() {
     ctx.clearRect(0, 0, game.width, game.height);
     ctx.fillStyle = game.color;
-    ctx.fillRect(0, 0, game.width, game.height);
+    ctx.drawImage(image,0, 0, game.width, game.height);
     ctx.beginPath();
     ctx.fillStyle = ball.color;
     ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
@@ -26,6 +29,13 @@ function display() {
         ctx.fillStyle = "red";
         ctx.font = " bold 100px Verdana";
         ctx.fillText("Game Over", (game.width - ctx.measureText("Game Over").width) / 2, 295)
+    }
+    if (nbrBrick === 0) {
+            ctx.fillStyle = "purple";
+            ctx.font = " bold 100px Verdana";
+            ctx.fillText("Level End", (game.width - ctx.measureText("Level End").width) / 2, 295);
+            init();
+            // cancelAnimationFrame(rafId);
     }
     bricker();
 }

@@ -24,7 +24,7 @@ let paddle = {
 let ball = {
 	x: (canvas.width) / 2,
 	y: canvas.height - 30,
-	color: "red",
+	color: "white",
 	radius: 15,
 	sens: -1,
 	length: 30,

@@ -8,6 +8,11 @@ export{ rafId}
 export { live }
 let live = 3;
 let rafId;
+function resetLive() {
+    refresh.addEventListener("click", function(){
+        live = 3;
+    });
+}
 function move() {
     ball.y += ball.vitesse * ball.sens.y;
     ball.x += ball.vitesse * ball.sens.x;
@@ -32,3 +37,4 @@ function move() {
     }
 }
 export {move}
+export {resetLive}

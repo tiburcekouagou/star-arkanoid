@@ -2,15 +2,21 @@
 import { display } from "./display.js";
 import { init } from "./init.js";
 import { move } from "./move.js";
+import { resetLive } from "./move.js";
 import { paddle } from "./main.js";
 import { game } from "./main.js";
 import { rafId } from "./move.js";
 import { live } from "./move.js";
+import { brick } from "./bricker.js";
+import { line } from "./bricker.js";
+import { column } from "./bricker.js";
+import { resetScoreAndnbrBrick } from "./bricker.js";
 let click = 0;
 document.addEventListener("DOMContentLoaded", function(){
     let left = document.getElementById("left");
     let right = document.getElementById("right");
-    let body = document.querySelector("canvas");
+    let refresh = document.getElementById("refresh");
+    let pauseAndPlay = document.querySelector("canvas");
     left.addEventListener("click", function(){
         if (paddle.x > 0) {
             paddle.x -= paddle.vitesse;
@@ -21,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function(){
             paddle.x += paddle.vitesse;
         }
     });
-    body.addEventListener("click",function(){
+    pauseAndPlay.addEventListener("click",function(){
         click++;
                 if(live !== 0){
                     if (game.gameOver === true) {
@@ -34,6 +40,24 @@ document.addEventListener("DOMContentLoaded", function(){
                         cancelAnimationFrame(rafId);
                     }
                 }
+    });
+    refresh.addEventListener("click", function(){
+        for (let i = 0; i < line; i++) {
+            brick[i] = [];
+            for (let u = 0; u < column; u++) {
+                brick[i][u] = {
+                    x: 0,
+                    y: 0,
+                    color: "antiquewhite",
+                    state: "alive"
+                }
+            }
+        }
+        init();
+        display();
+        resetLive();
+        resetScoreAndnbrBrick();
+        game.gameOver = false;
     });
 });
 

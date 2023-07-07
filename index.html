@@ -16,16 +16,26 @@
         }
         .parent div{
             border: 1px solid black;
-            padding: 1rem 2rem;
+            padding: .5rem 2rem;
             font-size: 2rem;
+            background-color: antiquewhite;
+        }
+        body{
+            background: url(illu.jpg) no-repeat;
+            background-size: cover;
+        }
+        img{
+            width: auto;
         }
     </style>
     <script src="main.js" type="module"></script>
 </head>
 <body>
+    <img src="chica-anime-hatsune-miku-4511.jpg" alt="" id="img" style="display: none;">
     <canvas width="800" height="600" id="canvas"></canvas>
     <div class="parent">
         <div class="fa-solid fa-arrow-left" id="left"></div>
+        <div class="fa-solid fa-refresh" id="refresh"></div>
         <div class="fa-solid fa-arrow-right" id="right"></div>
     </div>
 </body>

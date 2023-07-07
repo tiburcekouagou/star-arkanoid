@@ -1,6 +1,4 @@
 'use strict'
-import { init } from "./init.js";
-import { game } from "./main.js";
 import { ctx } from "./main.js";
 import { ball } from "./main.js";
 export{score}
@@ -20,10 +18,16 @@ for (let i = 0; i < line; i++) {
         brick[i][u] = {
             x: 0,
             y: 0,
-            color: "maroon",
+            color: "antiquewhite",
             state: "alive"
         }
     }
+}
+function resetScoreAndnbrBrick() {
+    refresh.addEventListener("click", function(){
+        score = 0;
+        nbrBrick = line * column
+    });
 }
     function bricker() {
         for (let i = 0; i < line; i++) {
@@ -41,16 +45,11 @@ for (let i = 0; i < line; i++) {
                 score += 1;
                 nbrBrick -=1;
             }
-            if (nbrBrick === 0) {
-                setTimeout(() => {
-                    init();
-                    cancelAnimationFrame(rafId);
-                    ctx.fillStyle = "purple";
-                    ctx.font = " bold 100px Verdana";
-                    ctx.fillText("Level End", (game.width - ctx.measureText("Level End").width) / 2, 295);
-                }, 250);
-            }
         }
     }
 }
     export {bricker}
+    export { brick }
+    export {line}
+    export { column}
+    export{resetScoreAndnbrBrick}
