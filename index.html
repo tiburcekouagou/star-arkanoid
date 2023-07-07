@@ -3,15 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/975d856422.js" crossorigin="anonymous"></script>
     <title>Dessiner une balle</title>
-    <!-- <style>
+    <style>
         #canvas{
             border: 1px solid black;
         }
-    </style> -->
+        .parent{
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+        }
+        .parent div{
+            border: 1px solid black;
+            padding: 1rem 2rem;
+            font-size: 2rem;
+        }
+    </style>
     <script src="main.js" type="module"></script>
 </head>
 <body>
     <canvas width="800" height="600" id="canvas"></canvas>
+    <div class="parent">
+        <div class="fa-solid fa-arrow-left" id="left"></div>
+        <div class="fa-solid fa-arrow-right" id="right"></div>
+    </div>
 </body>
 </html>

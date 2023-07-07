@@ -2,6 +2,7 @@
 import { move } from "./move.js";
 import { moveWithKey } from "./moveWithKey.js";
 import { display } from "./display.js";
+import { nbrBrick } from "./bricker.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d");
 let rafId;
@@ -18,7 +19,7 @@ let paddle = {
 	sens: 1,
 	width: 150,
 	height: 15,
-	vitesse: 25
+	vitesse: 50
 }
 let ball = {
 	x: (canvas.width) / 2,
@@ -27,9 +28,12 @@ let ball = {
 	radius: 15,
 	sens: -1,
 	length: 30,
-	vitesse: 10
+	vitesse: 6
 }
 ball.sens = { x: 0, y: -1 }
+if (nbrBrick > 12) {
+	ball.vitesse = ball.vitesse +2;			 
+}
 export {paddle};
 export {game};
 export {rafId};

@@ -4,6 +4,7 @@ import { game } from "./main.js";
 import { ctx } from "./main.js";
 import { ball } from "./main.js";
 export{score}
+export{nbrBrick}
 let score = 0;
 let width = 100;
 let height = 25;
@@ -41,11 +42,13 @@ for (let i = 0; i < line; i++) {
                 nbrBrick -=1;
             }
             if (nbrBrick === 0) {
-                ctx.fillStyle = "purple";
-                ctx.font = " bold 100px Verdana";
-                ctx.fillText("Level End", (game.width - ctx.measureText("Level End").width) / 2, 295);
-                cancelAnimationFrame(rafId);
-                init();
+                setTimeout(() => {
+                    init();
+                    cancelAnimationFrame(rafId);
+                    ctx.fillStyle = "purple";
+                    ctx.font = " bold 100px Verdana";
+                    ctx.fillText("Level End", (game.width - ctx.measureText("Level End").width) / 2, 295);
+                }, 250);
             }
         }
     }

@@ -5,6 +5,7 @@ import { ball } from "./main.js";
 import { paddle } from "./main.js";
 import { ctx } from "./main.js";
 import { score } from "./bricker.js";
+import { live } from "./move.js";
 function display() {
     ctx.clearRect(0, 0, game.width, game.height);
     ctx.fillStyle = game.color;
@@ -18,6 +19,14 @@ function display() {
     ctx.fillStyle = "black";
     ctx.font = " bold 25px Verdana";
     ctx.fillText(`score = ${score}`, 20, 400)
+    ctx.fillStyle = "black";
+    ctx.font = " bold 25px Verdana";
+    ctx.fillText(`live = ${live}`, 650, 400)
+    if (live === 0) {
+        ctx.fillStyle = "red";
+        ctx.font = " bold 100px Verdana";
+        ctx.fillText("Game Over", (game.width - ctx.measureText("Game Over").width) / 2, 295)
+    }
     bricker();
 }
 export {display}

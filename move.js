@@ -5,10 +5,12 @@ import { game } from "./main.js";
 import { ball } from "./main.js";
 import { ctx } from "./main.js";
 export{ rafId}
+export { live }
+let live = 3;
 let rafId;
 function move() {
-    ball.y += 6 * ball.sens.y;
-    ball.x += 6 * ball.sens.x;
+    ball.y += ball.vitesse * ball.sens.y;
+    ball.x += ball.vitesse * ball.sens.x;
     display();
     collision();
     rafId = requestAnimationFrame(move);
@@ -20,6 +22,7 @@ function move() {
     }
     if (game.gameOver === true) {
         cancelAnimationFrame(rafId);
+        live--;
         ctx.fillStyle = "red";
         ctx.font = " bold 100px Verdana";
         ctx.fillText("Game Over", (game.width - ctx.measureText("Game Over").width) / 2, 295)
